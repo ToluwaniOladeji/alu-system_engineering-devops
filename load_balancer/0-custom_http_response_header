@@ -17,7 +17,7 @@ echo "Ceci n'est pas une page" > /var/www/html/404.html
 HOSTNAME=$(hostname)
 
 # Overwrite the default Nginx site config
-cat > /etc/nginx/sites-available/default <<EOF
+cat > /etc/nginx/sites-available/default <<'EOF'
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -26,10 +26,10 @@ server {
     index index.html index.htm;
     server_name _;
 
-    add_header X-Served-By $HOSTNAME;
+    add_header X-Served-By $hostname;
 
     location / {
-        try_files \$uri \$uri/ =404;
+        try_files $uri $uri/ =404;
     }
 
     error_page 404 /404.html;
@@ -38,7 +38,6 @@ server {
     }
 }
 EOF
-
 # Test Nginx configuration and restart service
 nginx -t
 service nginx restart
