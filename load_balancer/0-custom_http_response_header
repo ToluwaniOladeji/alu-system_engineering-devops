@@ -10,7 +10,7 @@ apt-get install -y nginx
 
 # Create web root and simple HTML files
 mkdir -p /var/www/html
-echo "Holberton School" > /var/www/html/index.html
+echo "Holberton School is Good" > /var/www/html/index.html
 echo "Ceci n'est pas une page" > /var/www/html/404.html
 
 # Store hostname in variable
