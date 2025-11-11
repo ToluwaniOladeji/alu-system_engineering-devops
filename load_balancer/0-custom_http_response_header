@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Configures Nginx to include a custom header X-Served-By with the server's hostname
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Update package index and install Nginx
+apt-get update -y
+apt-get install -y nginx
+
+# Create web root and simple HTML files
+mkdir -p /var/www/html
+echo "Holberton School" > /var/www/html/index.html
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+
+# Store hostname in variable
+HOSTNAME=$(hostname)
+
+# Overwrite the default Nginx site config
+cat > /etc/nginx/sites-available/default <<EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html index.htm;
+    server_name _;
+
+    add_header X-Served-By $HOSTNAME;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+}
+EOF
+
+# Test Nginx configuration and restart service
+nginx -t
+service nginx restart
+
